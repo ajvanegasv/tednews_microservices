@@ -1,0 +1,11 @@
+{
+    "name": "tednews-devcontainer-backend",
+    "image": "mcr.microsoft.com/devcontainers/go:1.22",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "golang.Go"
+            ]
+        }
+    }
+}
