@@ -1,0 +1,6 @@
+package cronjobs
+
+func UpdateInfoTednewsChannel () {
+
+	
+}

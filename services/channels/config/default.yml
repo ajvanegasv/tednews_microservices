@@ -1,0 +1,10 @@
+redis:
+  host: "localhost"
+  port: 6379
+  password: "eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81"
+  db: 0
+server:
+  port: 8080
+  youtube_api_url: "https://youtube.googleapis.com/youtube/v3"
+  youtube_channel_id: "UCR64EsUCYA-10uWmiDt4nog"
+  youtube_api_key: "AIzaSyA9hu57B7cz13gkSFmisnt8ZHbw_1BaElE"
