@@ -7,9 +7,14 @@ import (
 
 func Init() {
 	config := config.GetConfig()
-
 	cronjobs.Init()
 
 	r := NewRouter()
-	r.Run(config.GetString("server.port"))
+
+
+	if (config.GetString("server.port") != "") {
+		r.Run(config.GetString("server.port"))
+	} else {
+		r.Run()
+	}
 }
