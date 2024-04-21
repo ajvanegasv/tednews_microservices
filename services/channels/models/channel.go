@@ -21,7 +21,6 @@ func (c Channel) GetChannelByIdFromYoutubeAPI(id []string) ([]Channel, error) {
 	youtubeApiKey := conf.GetString("server.youtube_api_key")
 
 	endpoint := youtubeApi + "/channels?part=snippet&part=contentDetails&id=" + strings.Join(id, ",") + "&key=" + youtubeApiKey
-	log.Println(endpoint)
 	res, getErr := http.Get(endpoint)
 
 	if getErr != nil {
