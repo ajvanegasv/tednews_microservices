@@ -1,8 +1,8 @@
 package server
 
 import (
-	"github.com/ajvanegasv/tednews_microservices/services/tednews/config"
-	"github.com/ajvanegasv/tednews_microservices/services/tednews/server/cronjobs"
+	"github.com/ajvanegasv/tednews_microservices/services/channels/config"
+	"github.com/ajvanegasv/tednews_microservices/services/channels/server/cronjobs"
 )
 
 func Init() {
@@ -11,8 +11,7 @@ func Init() {
 
 	r := NewRouter()
 
-
-	if (config.GetString("server.port") != "") {
+	if config.GetString("server.port") != "" {
 		r.Run(config.GetString("server.port"))
 	} else {
 		r.Run()

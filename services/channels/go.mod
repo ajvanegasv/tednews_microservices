@@ -1,4 +1,4 @@
-module github.com/ajvanegasv/tednews_microservices/services/tednews
+module github.com/ajvanegasv/tednews_microservices/services/channels
 
 go 1.22.0
 

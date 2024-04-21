@@ -4,11 +4,13 @@ import (
 	"context"
 	"encoding/json"
 	"io"
+	"log"
 	"net/http"
 	"strings"
-	"github.com/ajvanegasv/tednews_microservices/services/tednews/config"
-	"github.com/ajvanegasv/tednews_microservices/services/tednews/database"
-	"github.com/ajvanegasv/tednews_microservices/services/tednews/structs/youtube"
+
+	"github.com/ajvanegasv/tednews_microservices/services/channels/config"
+	"github.com/ajvanegasv/tednews_microservices/services/channels/database"
+	"github.com/ajvanegasv/tednews_microservices/services/channels/structs/youtube"
 )
 
 type Channel youtube.Channel
@@ -18,7 +20,9 @@ func (c Channel) GetChannelByIdFromYoutubeAPI(id []string) ([]Channel, error) {
 	youtubeApi := conf.GetString("server.youtube_api_url")
 	youtubeApiKey := conf.GetString("server.youtube_api_key")
 
-	res, getErr := http.Get(youtubeApi + "/channels?part=snippet&part=contentDetails&id=" + strings.Join(id, ",") + "&key=" + youtubeApiKey)
+	endpoint := youtubeApi + "/channels?part=snippet&part=contentDetails&id=" + strings.Join(id, ",") + "&key=" + youtubeApiKey
+	log.Println(endpoint)
+	res, getErr := http.Get(endpoint)
 
 	if getErr != nil {
 		return []Channel{}, getErr
@@ -31,13 +35,13 @@ func (c Channel) GetChannelByIdFromYoutubeAPI(id []string) ([]Channel, error) {
 		return []Channel{}, ioErr
 	}
 
-	apiResponse, err := youtube.UnmarshalApiResponse(body)
-	
+	apiResponse, err := youtube.UnmarshalChannelApiResponse(body)
+
 	if err != nil {
 		return []Channel{}, err
 	}
 
-	var channels []Channel	
+	var channels []Channel
 	for _, item := range apiResponse.Items {
 		channels = append(channels, Channel(item))
 	}
@@ -48,8 +52,14 @@ func (c Channel) GetChannelByIdFromYoutubeAPI(id []string) ([]Channel, error) {
 func (c *Channel) Save() error {
 	redisDb := database.GetRedisDb()
 	ctx := context.Background()
-	_, err := redisDb.HSet(ctx, "channels", c.ID, c).Result()
 
+	data, err := c.MarshalBinary()
+	if err != nil {
+		return err
+	}
+
+	// Guardar la secuencia de bytes en Redis
+	_, err = redisDb.HSet(ctx, "channels", c.ID, data).Result()
 	if err != nil {
 		return err
 	}
@@ -74,4 +84,28 @@ func (c Channel) GetAllChannels() ([]Channel, error) {
 	}
 
 	return channelList, nil
+}
+
+func (c Channel) GetChannelById(id string) (Channel, error) {
+	redisDb := database.GetRedisDb()
+	ctx := context.Background()
+	channel, err := redisDb.HGet(ctx, "channels", id).Result()
+
+	if err != nil {
+		return Channel{}, err
+	}
+
+	var ch Channel
+	json.Unmarshal([]byte(channel), &ch)
+
+	return ch, nil
+
+}
+
+func (c *Channel) MarshalBinary() ([]byte, error) {
+	return json.Marshal(c)
+}
+
+func (c *Channel) UnmarshalBinary(data []byte) error {
+	return json.Unmarshal(data, c)
 }

@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/ajvanegasv/tednews_microservices/services/tednews/config"
-	"github.com/ajvanegasv/tednews_microservices/services/tednews/database"
-	"github.com/ajvanegasv/tednews_microservices/services/tednews/server"
+	"github.com/ajvanegasv/tednews_microservices/services/channels/config"
+	"github.com/ajvanegasv/tednews_microservices/services/channels/database"
+	"github.com/ajvanegasv/tednews_microservices/services/channels/server"
 )
 
 func main() {
