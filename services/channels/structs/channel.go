@@ -1,4 +1,4 @@
-package youtube
+package structs
 
 import "encoding/json"
 

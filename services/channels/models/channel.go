@@ -9,10 +9,11 @@ import (
 
 	"github.com/ajvanegasv/tednews_microservices/services/channels/config"
 	"github.com/ajvanegasv/tednews_microservices/services/channels/database"
-	"github.com/ajvanegasv/tednews_microservices/services/channels/structs/youtube"
+	"github.com/ajvanegasv/tednews_microservices/services/channels/structs"
 )
 
-type Channel youtube.Channel
+type Channel structs.Channel
+type ChannelContentDetails structs.ChannelContentDetails
 
 func (c Channel) GetChannelByIdFromYoutubeAPI(id []string) ([]Channel, error) {
 	conf := config.GetConfig()
@@ -33,7 +34,7 @@ func (c Channel) GetChannelByIdFromYoutubeAPI(id []string) ([]Channel, error) {
 		return []Channel{}, ioErr
 	}
 
-	apiResponse, err := youtube.UnmarshalChannelApiResponse(body)
+	apiResponse, err := structs.UnmarshalChannelApiResponse(body)
 
 	if err != nil {
 		return []Channel{}, err
@@ -106,4 +107,8 @@ func (c *Channel) MarshalBinary() ([]byte, error) {
 
 func (c *Channel) UnmarshalBinary(data []byte) error {
 	return json.Unmarshal(data, c)
+}
+
+func (c *Channel) GetChannelContentDetails() ChannelContentDetails {
+	return ChannelContentDetails(c.ContentDetails)
 }

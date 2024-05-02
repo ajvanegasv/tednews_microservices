@@ -8,6 +8,7 @@ import (
 )
 
 var channelModel = new(models.Channel)
+var playlistModel = new(models.Playlist)
 
 func UpdateInfoTednewsChannel() {
 	conf := config.GetConfig()
@@ -34,3 +35,35 @@ func UpdateInfoTednewsChannel() {
 		}
 	}
 }
+
+func UpdateInfoPlaylist() {
+	channels, error := channelModel.GetAllChannels()
+
+	if (error != nil) {
+		log.Println(error)
+		return
+	}
+
+	for _, channel := range channels {
+		contentDetail := channel.GetChannelContentDetails()
+
+		playlists, err  := playlistModel.GetPlaylistByIdFromYoutubeAPI([]string{contentDetail.RelatedPlaylists.Uploads})
+
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+
+		for _, playlist := range playlists {
+			err := playlist.Save()
+
+			if err != nil {
+				log.Println(err)
+				continue
+			}
+		}
+	}
+
+}
+
+

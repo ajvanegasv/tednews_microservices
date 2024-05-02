@@ -1,4 +1,4 @@
-package youtube
+package structs
 
 import (
 	"encoding/json"
@@ -19,11 +19,11 @@ type PlaylistResponse struct {
 	Kind          string           `json:"kind"`
 	Etag          string           `json:"etag"`
 	NextPageToken string           `json:"nextPageToken"`
-	Items         []PlaylistItem   `json:"items"`
+	Items         []Playlist   `json:"items"`
 	PageInfo      PlaylistPageInfo `json:"pageInfo"`
 }
 
-type PlaylistItem struct {
+type Playlist struct {
 	Kind           string                 `json:"kind"`
 	Etag           string                 `json:"etag"`
 	ID             string                 `json:"id"`
