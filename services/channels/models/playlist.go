@@ -18,7 +18,7 @@ func (p Playlist) GetPlaylistByIdFromYoutubeAPI(id []string) ([]Playlist, error)
 	conf := config.GetConfig()
 	youtubeApi := conf.GetString("server.youtube_api_url")
 	youtubeApiKey := conf.GetString("server.youtube_api_key")
-	endpoint := youtubeApi + "/playlistItems?part=snippet&part=contentDetails&id=" + strings.Join(id, ",") + "&key=" + youtubeApiKey
+	endpoint := youtubeApi + "/playlistItems?part=snippet&part=contentDetails&playlistId=" + strings.Join(id, ",") + "&key=" + youtubeApiKey
 
 	res, getErr := http.Get(endpoint)
 
