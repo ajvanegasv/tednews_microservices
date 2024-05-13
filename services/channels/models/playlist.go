@@ -72,10 +72,12 @@ func (p *Playlist) UnmarshalBinary(data []byte) error {
 	return json.Unmarshal(data, p)
 }
 
-func (p Playlist) GetAllPlaylists() ([]Playlist, error) {
+func (p Playlist) GetAllPlaylists(filters []map[string]string) ([]Playlist, error) {
 	redisDb := database.GetRedisDb()
 	ctx := context.Background()
 	playlists, err := redisDb.HGetAll(ctx, "playlists").Result()
+	
+	//TODO: Implement filters
 
 	if err != nil {
 		return []Playlist{}, err
@@ -89,6 +91,24 @@ func (p Playlist) GetAllPlaylists() ([]Playlist, error) {
 			return []Playlist{}, err
 		}
 		result = append(result, p)
+	}
+
+	return result, nil
+}
+
+func (p Playlist) GetPlaylistById(id string) (Playlist, error) {
+	redisDb := database.GetRedisDb()
+	ctx := context.Background()
+	playlist, err := redisDb.HGet(ctx, "playlists", id).Result()
+
+	if err != nil {
+		return Playlist{}, err
+	}
+
+	var result Playlist
+	err = result.UnmarshalBinary([]byte(playlist))
+	if err != nil {
+		return Playlist{}, err
 	}
 
 	return result, nil

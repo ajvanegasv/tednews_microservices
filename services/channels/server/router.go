@@ -19,6 +19,7 @@ func NewRouter() *gin.Engine {
 	{
 		playlistHandler := new(handlers.PlaylistHandler)
 		playlistGroup.GET("/", playlistHandler.GetPlaylists)
+		playlistGroup.GET("/:id", playlistHandler.GetPlaylistById)
 		
 	}
 
