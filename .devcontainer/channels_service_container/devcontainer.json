@@ -1,7 +1,7 @@
 {
     "name": "channels container",
-    "dockerComposeFile": ["../../docker-compose.yml"],
-    "service": "channels-micro",
+    "dockerComposeFile": ["../../docker-compose.yml", "../../docker-compose.development.yml"],
+    "service": "channels-micro-development",
     "workspaceFolder": "/workspace/services/channels",
     "shutdownAction": "none"
 }
