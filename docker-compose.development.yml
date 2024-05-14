@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:  
+  channels-micro-development:
+      image: mcr.microsoft.com/devcontainers/go:1.22
+      volumes:
+        - .:/workspace:cached
+      command: sleep infinity
+      networks:
+        - tednew-network
+      depends_on:
+        - redis
+networks:
+  tednews-network:
+    external: true
