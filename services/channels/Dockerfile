@@ -17,6 +17,7 @@ WORKDIR /
 RUN set -x && apk update && apk add --no-cache ca-certificates && rm -rf /var/cache/apk/*
 
 COPY --from=builder /app/main /app/main
+COPY ./config/default.yml /app/config/default.yml
 
 ENV GIN_MODE release
 EXPOSE 8080

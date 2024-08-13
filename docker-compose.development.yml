@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:  
   channels-micro-development:
       image: mcr.microsoft.com/devcontainers/go:1.22
@@ -7,7 +5,7 @@ services:
         - .:/workspace:cached
       command: sleep infinity
       networks:
-        - tednew-network
+        - tednews-network
       depends_on:
         - redis
 networks:

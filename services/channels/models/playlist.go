@@ -61,6 +61,11 @@ func (p *Playlist) Save() error {
 		return err
 	}
 
+	_, err = redisDb.SAdd(ctx, "playlist:"+p.Snippet.ChannelID, p.ID).Result()
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -72,7 +77,7 @@ func (p *Playlist) UnmarshalBinary(data []byte) error {
 	return json.Unmarshal(data, p)
 }
 
-func (p Playlist) GetAllPlaylists(filters []map[string]string) ([]Playlist, error) {
+func (p Playlist) GetAllPlaylists() ([]Playlist, error) {
 	redisDb := database.GetRedisDb()
 	ctx := context.Background()
 	playlists, err := redisDb.HGetAll(ctx, "playlists").Result()
@@ -112,4 +117,26 @@ func (p Playlist) GetPlaylistById(id string) (Playlist, error) {
 	}
 
 	return result, nil
+}
+
+func (p Playlist) GetPlaylistsByChannelId(channelId string) ([]Playlist, error) {
+	redisDb := database.GetRedisDb()
+	ctx := context.Background()
+
+	playlistIds, err := redisDb.SMembers(ctx, "playlist:"+channelId).Result()
+	if err != nil {
+		return []Playlist{}, err
+	}
+
+	var playlists []Playlist
+
+	for _, id := range playlistIds {
+		playlist, err := p.GetPlaylistById(id)
+		if err != nil {
+			return []Playlist{}, err
+		}
+		playlists = append(playlists, playlist)
+	}
+
+	return playlists, nil
 }

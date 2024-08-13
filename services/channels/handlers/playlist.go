@@ -9,16 +9,22 @@ type PlaylistHandler struct{}
 var playlistModel = new(models.Playlist)
 
 func (ph PlaylistHandler) GetPlaylists(c *gin.Context) {
-	filters := []map[string]string{
-		{"channelId": c.Query("channelId")},
+	var playlists []models.Playlist
+	var err error
+
+	channelId := c.Query("channelId")
+
+	if channelId != "" {
+		playlists, err = playlistModel.GetPlaylistsByChannelId(channelId)
+	} else {			
+		playlists, err = playlistModel.GetAllPlaylists()
 	}
-
-	playlists, err := playlistModel.GetAllPlaylists(filters)
-
+		
 	if err != nil {
 		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
+
 
 	c.JSON(200, playlists)
 }
